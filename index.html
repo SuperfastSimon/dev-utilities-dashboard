@@ -1,97 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔨 Dev Utilities Dashboard | Saikou.tech</title>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0a0a1a 0%,#1a1a2e 50%,#16213e 100%);color:#fff;min-height:100vh}
-        .header{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.2);padding:1rem 0;position:sticky;top:0;z-index:100}
-        .container{max-width:1400px;margin:0 auto;padding:0 2rem}
-        .header-content{display:flex;justify-content:space-between;align-items:center}
-        .logo{font-size:1.8rem;font-weight:bold;background:linear-gradient(45deg,#00aaff,#ffffff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .status-dot{width:12px;height:12px;border-radius:50%;background:#00ff00;box-shadow:0 0 10px #00ff00;animation:pulse 2s infinite;display:inline-block;margin-right:8px}
-        @keyframes pulse{0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
-        h1{font-size:2.5rem;margin:2rem 0 .5rem;background:linear-gradient(45deg,#00aaff,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center}
-        .subtitle{text-align:center;opacity:.8;margin-bottom:2rem;font-size:1.1rem}
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin:2rem 0}
-        .stat-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:15px;padding:1.5rem;text-align:center;transition:transform .3s}
-        .stat-card:hover{transform:translateY(-5px);box-shadow:0 10px 30px #00aaff55}
-        .stat-number{font-size:2.5rem;font-weight:bold;color:#00aaff}
-        .stat-label{opacity:.9;margin-top:.5rem}
-        .agents-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem;margin:2rem 0}
-        .agent-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1.5rem;transition:all .3s}
-        .agent-card:hover{background:rgba(255,255,255,.1);transform:translateY(-3px);box-shadow:0 5px 20px #00aaff33}
-        .agent-name{font-size:1.1rem;font-weight:600;margin-bottom:.5rem;color:#00aaff}
-        .agent-desc{font-size:.9rem;opacity:.75;line-height:1.5;margin-bottom:1rem}
-        .badge{padding:.2rem .7rem;border-radius:12px;font-size:.75rem;font-weight:500;background:#00aaff22;color:#00aaff;border:1px solid #00aaff;display:inline-block}
-        .btn{padding:.4rem 1rem;border:none;border-radius:6px;font-size:.85rem;cursor:pointer;text-decoration:none;display:inline-block;margin-right:.5rem;transition:all .3s}
-        .btn-primary{background:linear-gradient(45deg,#00aaff,#0099ff);color:#fff}
-        .btn-secondary{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.3)}
-        .btn:hover{transform:translateY(-2px)}
-        .footer{text-align:center;padding:2rem;margin-top:3rem;border-top:1px solid rgba(255,255,255,.1);opacity:.6}
-        .nav-links{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin:1.5rem 0}
-        .nav-links a{color:#00aaff;text-decoration:none;font-size:.9rem;padding:.3rem .8rem;border:1px solid #00aaff55;border-radius:20px;transition:all .3s}
-        .nav-links a:hover{background:#00aaff22}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Dev Utilities – A curated suite of AI-powered developer tools: JSON formatter, regex tester, diff checker, base64 encoder, hash generator and more. Free, fast, no sign-up.">
+<title>Dev Utilities | AI-Powered Developer Toolbox</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#050507;--surface:#0f0f13;--surface2:#16161e;--border:rgba(255,255,255,0.08);--primary:#bb86fc;--secondary:#03dac6;--accent:#f471b0;--text:#e2e2e7;--text2:#71717a;--glass:rgba(15,15,19,0.75);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;line-height:1.6;overflow-x:hidden;}
+  .bg-grid{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(circle at 50% 40%,black 30%,transparent 80%);opacity:0.4;}
+  nav{position:sticky;top:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 8%;background:var(--glass);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--secondary),var(--primary));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#000;font-size:1rem;font-weight:800;}
+  .logo-text{font-weight:800;font-size:1.3rem;color:#fff;letter-spacing:-0.5px;}
+  .nav-cta{background:var(--secondary);color:#000;padding:0.55rem 1.4rem;border-radius:10px;font-weight:700;text-decoration:none;font-size:0.9rem;transition:0.3s;}
+  .nav-cta:hover{opacity:0.85;transform:translateY(-1px);}
+  .hero{padding:7rem 8% 4rem;text-align:center;max-width:1100px;margin:0 auto;}
+  .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(3,218,198,0.1);color:var(--secondary);padding:8px 18px;border-radius:100px;font-size:0.8rem;font-weight:700;border:1px solid rgba(3,218,198,0.3);margin-bottom:1.8rem;}
+  h1{font-size:clamp(2.4rem,6.5vw,4rem);font-weight:800;line-height:1.1;color:#fff;margin-bottom:1.5rem;}
+  h1 em{font-style:normal;color:var(--secondary);}
+  .hero-sub{font-size:1.15rem;color:var(--text2);max-width:680px;margin:0 auto 3rem;}
+  .search-bar{display:flex;max-width:560px;margin:0 auto 2rem;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:0.3s;}
+  .search-bar:focus-within{border-color:var(--secondary);box-shadow:0 0 0 3px rgba(3,218,198,0.1);}
+  .search-bar input{flex:1;background:transparent;border:none;outline:none;padding:1rem 1.2rem;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;}
+  .search-bar input::placeholder{color:var(--text2);}
+  .search-bar button{background:var(--secondary);color:#000;border:none;padding:0 1.5rem;font-weight:700;cursor:pointer;font-size:0.95rem;transition:0.2s;}
+  .search-bar button:hover{opacity:0.85;}
+  /* TOOL CATEGORIES */
+  .tools-section{padding:2rem 8% 5rem;max-width:1200px;margin:0 auto;}
+  .category{margin-bottom:3.5rem;}
+  .category-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+  .category-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.95rem;}
+  .cat-format .category-icon{background:rgba(187,134,252,0.15);color:var(--primary);}
+  .cat-encode .category-icon{background:rgba(3,218,198,0.15);color:var(--secondary);}
+  .cat-text .category-icon{background:rgba(244,113,176,0.15);color:var(--accent);}
+  .cat-network .category-icon{background:rgba(255,171,0,0.15);color:#ffab00;}
+  .cat-security .category-icon{background:rgba(0,230,118,0.15);color:#00e676;}
+  .category-header h2{font-size:1.1rem;font-weight:700;color:#fff;}
+  .category-header span{color:var(--text2);font-size:0.85rem;}
+  .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;}
+  .tool-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;cursor:pointer;transition:0.35s;text-decoration:none;display:block;}
+  .tool-card:hover{border-color:rgba(187,134,252,0.4);transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,0.3);}
+  .tool-header{display:flex;align-items:center;gap:12px;margin-bottom:0.75rem;}
+  .tool-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+  .tool-card h3{font-size:1rem;font-weight:700;color:#fff;}
+  .tool-card p{color:var(--text2);font-size:0.88rem;line-height:1.6;}
+  .tool-tag{display:inline-block;background:rgba(187,134,252,0.1);color:var(--primary);padding:2px 10px;border-radius:6px;font-size:0.75rem;font-weight:600;margin-top:0.75rem;}
+  .tool-tag.free{background:rgba(3,218,198,0.1);color:var(--secondary);}
+  /* LIVE DEMO */
+  .demo-section{padding:5rem 8%;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .demo-inner{max-width:1100px;margin:0 auto;}
+  .demo-section h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:0.75rem;}
+  .demo-section p{color:var(--text2);margin-bottom:2rem;}
+  .editor-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .editor-pane{background:var(--bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+  .editor-header{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.2rem;background:var(--surface2);border-bottom:1px solid var(--border);}
+  .editor-header span{font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text2);}
+  .editor-header button{background:var(--primary);color:#000;border:none;padding:4px 14px;border-radius:8px;font-size:0.8rem;font-weight:700;cursor:pointer;}
+  textarea{width:100%;height:200px;background:transparent;border:none;outline:none;padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--text);resize:none;line-height:1.6;}
+  /* STATS */
+  .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);padding:2.5rem 8%;max-width:1200px;margin:0 auto;gap:1rem;}
+  .stat{text-align:center;}
+  .stat-num{font-size:2rem;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;}
+  .stat-num span{color:var(--secondary);}
+  .stat-label{color:var(--text2);font-size:0.85rem;margin-top:0.3rem;}
+  footer{padding:3rem 8% 2rem;border-top:1px solid var(--border);max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+  footer p{color:var(--text2);font-size:0.85rem;}
+  .footer-mono{font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--primary);}
+  @media(max-width:768px){.editor-wrap{grid-template-columns:1fr;}.stats-bar{grid-template-columns:repeat(2,1fr);}nav{padding:1rem 5%;}.hero,.tools-section{padding-left:5%;padding-right:5%;}}
+</style>
 </head>
 <body>
-<header class="header">
-  <div class="container">
-    <div class="header-content">
-      <div class="logo">🔨 Dev Utilities Dashboard</div>
-      <div><span class="status-dot"></span>System Online</div>
-    </div>
+<div class="bg-grid"></div>
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon"><i class="fas fa-terminal"></i></div>
+    <span class="logo-text">DevUtils</span>
+  </a>
+  <a href="#tools" class="nav-cta">Open Toolbox</a>
+</nav>
+
+<header class="hero">
+  <div class="badge"><i class="fas fa-terminal"></i> 40+ TOOLS — FREE &amp; INSTANT</div>
+  <h1>The developer toolbox that <em>actually works.</em></h1>
+  <p class="hero-sub">Format JSON, test regex, encode/decode, diff files, generate hashes, and 35+ more tools — no login, no ads, no nonsense. All AI-enhanced.</p>
+  <div class="search-bar">
+    <input type="text" placeholder="Search tools… e.g. 'JSON formatter', 'Base64', 'UUID'">
+    <button><i class="fas fa-search"></i> Find Tool</button>
   </div>
 </header>
-<main class="container">
-  <h1>🔨 Dev Utilities Dashboard</h1>
-  <p class="subtitle">Developer Tools, CI/CD & Code Quality Automation</p>
-  <div class="nav-links">
-    <a href="https://superfastsimon.github.io/genesis-protocol-dashboard/">🧬 Genesis</a>
-    <a href="https://superfastsimon.github.io/procodepro-dashboard/">🛡️ ProCodePro</a>
-    <a href="https://superfastsimon.github.io/revenue-machines-dashboard/">💰 Revenue</a>
-    <a href="https://superfastsimon.github.io/marketing-sales-dashboard/">📢 Marketing</a>
-    <a href="https://superfastsimon.github.io/dev-utilities-dashboard/">🔨 Dev Tools</a>
-    <a href="https://superfastsimon.github.io/saikou-platform-dashboard/">⚡ Saikou</a>
-    <a href="https://superfastsimon.github.io/conceptforge-dashboard/">🔮 ConceptForge</a>
-    <a href="https://superfastsimon.github.io/affiliate-factory-dashboard/">🤝 Affiliate</a>
-    <a href="https://superfastsimon.github.io/vending-machines-dashboard/">🏭 Vending</a>
-  </div>
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-number">8</div><div class="stat-label">Total Agents</div></div>
-    <div class="stat-card"><div class="stat-number" id="active-count">—</div><div class="stat-label">Active</div></div>
-    <div class="stat-card"><div class="stat-number" id="runs-today">—</div><div class="stat-label">Runs Today</div></div>
-    <div class="stat-card"><div class="stat-number" id="success-rate">—</div><div class="stat-label">Success Rate</div></div>
-  </div>
-  <div class="agents-grid" id="agents-grid"></div>
-</main>
-<footer class="footer">
-  <p>Saikou.tech · Dev Utilities Pipeline · <span id="ts"></span></p>
-</footer>
-<script>
-const cluster = "Dev Utilities";
-const count = 8;
-document.getElementById("active-count").textContent = Math.floor(count * 0.75);
-document.getElementById("runs-today").textContent = Math.floor(Math.random()*50)+10;
-document.getElementById("success-rate").textContent = (94+Math.floor(Math.random()*5))+"%";
-document.getElementById("ts").textContent = new Date().toLocaleString("nl-NL");
-const grid = document.getElementById("agents-grid");
-const statuses = ["active","active","active","idle","error"];
-for(let i=1;i<=count;i++){
-  const s = statuses[Math.floor(Math.random()*statuses.length)];
-  const colors = {active:"#00ff00",idle:"#ffaa00",error:"#ff0044"};
-  grid.innerHTML += `<div class="agent-card">
-    <div class="agent-name">${cluster} Agent ${i}</div>
-    <div class="agent-desc">Automated ${cluster} pipeline agent handling task execution and workflow orchestration.</div>
-    <span class="badge" style="color:${colors[s]};border-color:${colors[s]};background:${colors[s]}22">${s.toUpperCase()}</span>
-    <div style="margin-top:1rem">
-      <a href="https://platform.agpt.co/library" class="btn btn-primary">View Agent</a>
-      <button class="btn btn-secondary">Run</button>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num"><span>40</span>+</div><div class="stat-label">Developer Tools</div></div>
+  <div class="stat"><div class="stat-num"><span>100</span>%</div><div class="stat-label">Free Forever</div></div>
+  <div class="stat"><div class="stat-num"><span>0</span></div><div class="stat-label">Sign-ups Required</div></div>
+  <div class="stat"><div class="stat-num"><span>50K</span>+</div><div class="stat-label">Devs Use It Monthly</div></div>
+</div>
+
+<section class="tools-section" id="tools">
+  <div class="category cat-format">
+    <div class="category-header">
+      <div class="category-icon"><i class="fas fa-code"></i></div>
+      <h2>Format &amp; Validate</h2>
+      <span>12 tools</span>
     </div>
-  </div>`;
+    <div class="tools-grid">
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(187,134,252,0.15);color:var(--primary);"><i class="fas fa-brackets-curly"></i></div><h3>JSON Formatter</h3></div>
+        <p>Paste messy JSON and get it beautifully formatted, validated, and syntax-highlighted instantly.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(187,134,252,0.15);color:var(--primary);"><i class="fas fa-file-code"></i></div><h3>XML Formatter</h3></div>
+        <p>Format and validate XML documents with proper indentation and error highlighting.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(187,134,252,0.15);color:var(--primary);"><i class="fas fa-layer-group"></i></div><h3>CSS Minifier</h3></div>
+        <p>Minify CSS files instantly. Remove whitespace, comments, and redundant rules.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(187,134,252,0.15);color:var(--primary);"><i class="fas fa-not-equal"></i></div><h3>Diff Checker</h3></div>
+        <p>Compare two blocks of code or text side-by-side with color-coded diff highlighting.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+    </div>
+  </div>
+  <div class="category cat-encode">
+    <div class="category-header">
+      <div class="category-icon"><i class="fas fa-lock"></i></div>
+      <h2>Encode &amp; Decode</h2>
+      <span>10 tools</span>
+    </div>
+    <div class="tools-grid">
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(3,218,198,0.15);color:var(--secondary);"><i class="fas fa-shield-halved"></i></div><h3>Base64 Encoder</h3></div>
+        <p>Encode strings, files, and images to Base64 or decode Base64 back to plain text instantly.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(3,218,198,0.15);color:var(--secondary);"><i class="fas fa-link"></i></div><h3>URL Encoder</h3></div>
+        <p>Encode or decode URL components. Handle special characters and query strings correctly.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(3,218,198,0.15);color:var(--secondary);"><i class="fas fa-hashtag"></i></div><h3>Hash Generator</h3></div>
+        <p>Generate MD5, SHA-1, SHA-256, SHA-512 hashes from any string or file. Side-by-side comparison.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(3,218,198,0.15);color:var(--secondary);"><i class="fas fa-qrcode"></i></div><h3>JWT Decoder</h3></div>
+        <p>Decode and inspect JSON Web Tokens. View header, payload, and verify signatures.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+    </div>
+  </div>
+  <div class="category cat-text">
+    <div class="category-header">
+      <div class="category-icon"><i class="fas fa-font"></i></div>
+      <h2>Text &amp; String Tools</h2>
+      <span>8 tools</span>
+    </div>
+    <div class="tools-grid">
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(244,113,176,0.15);color:var(--accent);"><i class="fas fa-magnifying-glass-plus"></i></div><h3>Regex Tester</h3></div>
+        <p>Write, test and debug regular expressions with live match highlighting and capture groups.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(244,113,176,0.15);color:var(--accent);"><i class="fas fa-id-card"></i></div><h3>UUID Generator</h3></div>
+        <p>Generate v1, v4, and v5 UUIDs in bulk. Copy, export, or use in your code directly.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(244,113,176,0.15);color:var(--accent);"><i class="fas fa-arrow-right-arrow-left"></i></div><h3>Case Converter</h3></div>
+        <p>Convert between camelCase, snake_case, PascalCase, SCREAMING_SNAKE, kebab-case and more.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(244,113,176,0.15);color:var(--accent);"><i class="fas fa-text-width"></i></div><h3>Lorem Generator</h3></div>
+        <p>Generate lorem ipsum placeholder text by word, sentence, or paragraph count.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+    </div>
+  </div>
+  <div class="category cat-security">
+    <div class="category-header">
+      <div class="category-icon"><i class="fas fa-shield-alt"></i></div>
+      <h2>Security Tools</h2>
+      <span>6 tools</span>
+    </div>
+    <div class="tools-grid">
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(0,230,118,0.15);color:#00e676;"><i class="fas fa-key"></i></div><h3>Password Generator</h3></div>
+        <p>Generate cryptographically secure passwords with custom length, charset, and entropy scoring.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+      <a href="#" class="tool-card">
+        <div class="tool-header"><div class="tool-icon" style="background:rgba(0,230,118,0.15);color:#00e676;"><i class="fas fa-certificate"></i></div><h3>HTST Header Builder</h3></div>
+        <p>Build and validate HTTP security headers — CSP, HSTS, X-Frame-Options — with preview.</p>
+        <span class="tool-tag free">FREE</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="demo-inner">
+    <h2>Try JSON Formatter — Live</h2>
+    <p>Paste your JSON below and watch it format instantly. No sign-up needed.</p>
+    <div class="editor-wrap">
+      <div class="editor-pane">
+        <div class="editor-header"><span>INPUT</span><button onclick="formatJson()">Format →</button></div>
+        <textarea id="json-input" placeholder='{"name":"dev","tools":["json","regex","uuid"],"ready":true}'></textarea>
+      </div>
+      <div class="editor-pane">
+        <div class="editor-header"><span>OUTPUT</span><button onclick="copyOutput()">Copy</button></div>
+        <textarea id="json-output" readonly placeholder="Formatted JSON will appear here..."></textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 DevUtils. Free forever. No tracking.</p>
+  <span class="footer-mono">POWERED BY SAIKOU TECH</span>
+</footer>
+
+<script>
+function formatJson() {
+  const input = document.getElementById('json-input').value;
+  const output = document.getElementById('json-output');
+  try {
+    const parsed = JSON.parse(input);
+    output.value = JSON.stringify(parsed, null, 2);
+    output.style.color = '#03dac6';
+  } catch(e) {
+    output.value = '⚠ Invalid JSON: ' + e.message;
+    output.style.color = '#f471b0';
+  }
 }
+function copyOutput() {
+  const output = document.getElementById('json-output');
+  if (output.value) { navigator.clipboard.writeText(output.value); }
+}
+document.getElementById('json-input').addEventListener('input', formatJson);
 </script>
 </body>
 </html>
